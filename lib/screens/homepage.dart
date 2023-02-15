@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scroll_snap_list/scroll_snap_list.dart';
+import 'package:whatsapp_clone/global.dart';
+import 'package:whatsapp_clone/screens/country_battle.dart';
+import 'package:whatsapp_clone/screens/pinpoint_mode.dart';
+import 'package:whatsapp_clone/widgets/modeTile.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -8,13 +13,30 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+//routing to selected game mode
+  routeMode() {
+    //route to pin point
+    if (selectedMode == 'Pin Point') {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const PinPointModePage(),
+      ));
+    }
+
+    //route to country battle
+    if (selectedMode == 'Country Battle') {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const CountryBattleModePage(),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: const [
           Text("Geo", style: TextStyle(color: Colors.greenAccent)),
           Text("Wizard", style: TextStyle(color: Colors.orange)),
         ],
@@ -23,7 +45,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             //user profile image
             CircleAvatar(
@@ -49,38 +71,52 @@ class _HomePageScreenState extends State<HomePageScreen> {
             // horizontal sliding options
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10).copyWith(right: 0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(22.0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 250,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: 250,
-                      color: Colors.white,
-                    ),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedMode = 'Country Battle';
+                          });
+                        },
+                        splashColor: Colors.yellow,
+                        child: ModeTile(
+                          modeId: 1,
+                          modeName: 'Country Battle',
+                          imageName: 'country_battle.jpg',
+                        )),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedMode = 'Pin Point';
+                          });
+                        },
+                        child: ModeTile(
+                          modeId: 2,
+                          modeName: 'Pin Point',
+                          imageName: 'pinPoint.jpg',
+                        )),
                   ],
                 ),
               ),
             ),
 
-            //selected mode
-            Text('selected mode'),
+            //selected mode displayed
+
+            Text('selected mode : $selectedMode'),
 
             SizedBox(
               height: 30,
             ),
 
+            //play button
+
             InkWell(
-              onTap: () {},
+              onTap: routeMode,
               child: Container(
                 width: 130,
                 height: 50,
